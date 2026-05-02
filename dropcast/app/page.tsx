@@ -1,3 +1,5 @@
+
+
 import { Suspense } from "react";
 import DashboardContent from "./DashboardContent";
 import { ReservoirCardSkeleton } from "@/components/ReservoirCard";
@@ -12,8 +14,8 @@ function DashboardSkeleton() {
         ))}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="rounded-xl bg-slate-900 border border-blue-900/60 p-6 animate-pulse h-48" />
-        <div className="rounded-xl bg-slate-900 border border-blue-900/60 p-6 animate-pulse h-48" />
+        <div className="rounded-xl bg-slate-300 border border-blue-900/60 p-6 animate-pulse h-48" />
+        <div className="rounded-xl bg-slate-300 border border-blue-900/60 p-6 animate-pulse h-48" />
       </div>
     </div>
   );

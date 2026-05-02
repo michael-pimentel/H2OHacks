@@ -51,7 +51,7 @@ const ALERTS: AlertCondition[] = [
   },
   {
     id: "6",
-    title: "Water Year 2024–25 Outlook",
+    title: "Water Year 2025–26 Outlook",
     description:
       "Current water year is tracking near-normal following 2023's atmospheric river recovery. System-wide storage at ~61% is above drought-year comparisons but below pre-drought averages of 75–85%.",
     severity: "watch",
@@ -109,7 +109,7 @@ export default function AlertsPage() {
           <p className="text-slate-400 text-sm">Current Central Valley status · Historical drought comparison</p>
         </div>
         <div className="ml-auto hidden sm:flex items-center gap-2">
-          <span className="text-xs text-slate-500">Updated: May 2, 2025</span>
+          <span className="text-xs text-slate-500">Updated: May 2, 2026</span>
         </div>
       </div>
 
@@ -176,13 +176,13 @@ export default function AlertsPage() {
         </h2>
         <div className="rounded-xl bg-slate-900 border border-blue-900/60 p-6">
           <p className="text-xs text-slate-400 mb-5">
-            Current storage levels (2024–25) compared against drought years 2015 and 2021 at comparable time of year.
+            Current storage levels (2025–26) compared against drought years 2015 and 2021 at comparable time of year.
             Higher is better.
           </p>
           <DroughtComparisonChart data={droughtData} />
           <div className="flex flex-wrap gap-4 mt-4 text-xs">
             {[
-              { color: "#0ea5e9", label: "Current (2024–25)" },
+              { color: "#0ea5e9", label: "Current (2025–26)" },
               { color: "#f59e0b", label: "Drought 2021" },
               { color: "#ef4444", label: "Drought 2015" },
             ].map(({ color, label }) => (
