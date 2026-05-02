@@ -21,10 +21,16 @@ interface Props {
 }
 
 export default function ReservoirCard({ reservoir }: Props) {
-  const last90 = reservoir.history.slice(-90).map((p) => ({
-    date: p.date,
-    val: p.storageAF,
-  }));
+  const last90 = reservoir.history.slice(-90).map((p, i) => {
+    const parsed = new Date(p.date);
+    const isValid = !isNaN(parsed.getTime());
+
+    return {
+      date: isValid ? parsed : null,
+      fallbackDay: i, // index as fallback
+      val: p.storageAF,
+    };
+  });
 
   const color = STATUS_COLORS[reservoir.status];
 
@@ -95,7 +101,12 @@ export default function ReservoirCard({ reservoir }: Props) {
                 color: "#f1f5f9",
               }}
               formatter={(val) => [`${formatAF(Number(val))} acre-feet`, "Water stored"]}
-              labelFormatter={(label) => label}
+              labelFormatter={(label, payload) => {
+                const point = payload?.[0]?.payload;
+                return point?.date
+                  ? new Date(point.date).toLocaleDateString()
+                  : "";
+              }}
             />
           </AreaChart>
         </ResponsiveContainer>

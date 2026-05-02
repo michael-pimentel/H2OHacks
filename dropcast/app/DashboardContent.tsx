@@ -91,6 +91,12 @@ export default async function DashboardContent() {
               : "Critical"}
           </div>
         </div>
+        <div className="h-8 w-px bg-blue-900/60 hidden sm:block" />
+        <div>
+          <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">Current Season</div>
+          <div className="text-sm font-semibold text-white">2025–26</div>
+          <div className="text-xs text-slate-400">California water year: Oct – Sep</div>
+        </div>
       </div>
 
       {/* RESERVOIRS */}
