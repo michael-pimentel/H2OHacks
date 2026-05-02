@@ -21,11 +21,11 @@ export default function ForecastPage() {
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Predictive Forecast</h1>
           <p className="text-slate-400 text-sm">
-            Deterministic baseline model · Ready for DNN/AI plug-in
+              What water levels might look like in the future
           </p>
         </div>
         <div className="ml-auto hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 ring-1 ring-amber-500/30">
-          <span className="text-xs text-amber-400 font-medium">Baseline Model Active</span>
+          <span className="text-xs text-amber-400 font-medium">Linear Model</span>
         </div>
       </div>
 

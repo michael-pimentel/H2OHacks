@@ -4,7 +4,6 @@ import { useUsageStore, computeStats } from "@/lib/store";
 import { forecastEngine } from "@/lib/forecast";
 import { getSeededReservoirs } from "@/lib/cdec";
 import ForecastChart from "@/components/ForecastChart";
-import { Info } from "lucide-react";
 
 const SEEDED = getSeededReservoirs();
 
@@ -28,17 +27,6 @@ export default function ForecastPageContent() {
 
   return (
     <div className="space-y-6">
-      {/* Model info banner */}
-      <div className="rounded-xl bg-slate-900 border border-blue-900/60 p-4 flex items-start gap-3">
-        <Info className="h-4 w-4 text-sky-400 mt-0.5 shrink-0" />
-        <div className="text-xs text-slate-400 leading-relaxed">
-          <span className="text-white font-medium">Baseline model</span> uses a linear trend over the last 30 days of reservoir data,
-          adjusted for seasonal evaporation coefficients and your logged daily usage (
-          <span className="text-sky-400">{stats.dailyAF.toFixed(2)} AF/day</span> from {stats.count} logged entries).
-          Replace <code className="bg-slate-800 px-1 rounded text-sky-300">forecastEngine()</code> in{" "}
-          <code className="bg-slate-800 px-1 rounded text-sky-300">lib/forecast.ts</code> to plug in a DNN or external model API.
-        </div>
-      </div>
 
       {/* Reservoir selector */}
       <div className="flex flex-wrap gap-2">
@@ -69,7 +57,7 @@ export default function ForecastPageContent() {
           <div className="text-right">
             <div className="text-xs text-slate-400">Capacity</div>
             <div className="text-sm font-semibold text-white">
-              {(reservoir.capacityAF / 1_000_000).toFixed(2)}M AF
+              {(reservoir.capacityAF / 1_000_000).toFixed(2)}M acre-feet
             </div>
           </div>
         </div>
@@ -77,14 +65,6 @@ export default function ForecastPageContent() {
         <ForecastChart reservoir={reservoir} forecast={forecast} />
       </div>
 
-      {/* Usage context */}
-      {entries.length === 0 && (
-        <div className="rounded-xl bg-amber-500/5 border border-amber-500/20 p-4 text-xs text-amber-400">
-          No usage entries logged yet. Visit the{" "}
-          <a href="/usage" className="underline hover:text-amber-300">Usage page</a> to log water use — it will
-          refine the forecast by subtracting your daily consumption from projected storage.
-        </div>
-      )}
     </div>
   );
 }

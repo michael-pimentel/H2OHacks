@@ -49,7 +49,7 @@ export default async function DashboardContent() {
         <div className="h-8 w-px bg-blue-900/60 hidden sm:block" />
         <div>
           <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">Current Season</div>
-          <div className="text-sm font-semibold text-white">2024–25</div>
+          <div className="text-sm font-semibold text-white">2025–26</div>
           <div className="text-xs text-slate-400">California water year: Oct – Sep</div>
         </div>
       </div>
@@ -80,13 +80,12 @@ export default async function DashboardContent() {
           <div className="space-y-4">
             <div>
               <div className="flex justify-between text-xs text-slate-400 mb-1.5">
-                <span>Snowpack level vs. normal</span>
+                <span>Current SWE</span>
                 <span className="text-sky-400 font-semibold">73% of average</span>
               </div>
               <div className="h-2.5 w-full rounded-full bg-slate-800 overflow-hidden">
                 <div className="h-full rounded-full bg-sky-500 transition-all duration-700" style={{ width: "73%" }} />
               </div>
-              <p className="text-xs text-slate-500 mt-1">Snow melts each spring and refills reservoirs — less snow now means less water later.</p>
             </div>
             <div className="grid grid-cols-3 gap-3 text-center">
               {[
@@ -101,7 +100,7 @@ export default async function DashboardContent() {
               ))}
             </div>
             <p className="text-xs text-slate-500">
-              Below-normal snowpack — potential water shortage this summer. Runoff peak expected mid-April.
+              Below-normal snowpack indicates potential summer water stress. Runoff peak expected mid-April.
             </p>
           </div>
         </div>

@@ -21,7 +21,7 @@ export default function Navbar() {
             <Droplets className="h-4 w-4 text-sky-400" />
           </div>
           <div>
-            <span className="text-lg font-bold tracking-tight text-white">DropCast</span>
+            <span className="text-lg font-bold tracking-tight text-white">Reservoir IQ</span>
             <span className="ml-1 text-xs text-sky-400/70 hidden sm:inline">CV Water Intelligence</span>
           </div>
         </Link>
