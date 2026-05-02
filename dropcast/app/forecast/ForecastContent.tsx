@@ -51,7 +51,7 @@ export default function ForecastPageContent() {
           <div>
             <h2 className="text-lg font-semibold text-white">{reservoir.name}</h2>
             <p className="text-xs text-slate-400 mt-0.5">
-              {reservoir.percentFull}% full · {(reservoir.currentAF / 1000).toFixed(0)}K AF current storage
+              {reservoir.percentFull}% full · {(reservoir.currentAF / 1000).toFixed(0)}K acre-feet current storage
             </p>
           </div>
           <div className="text-right">

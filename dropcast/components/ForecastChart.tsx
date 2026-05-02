@@ -85,7 +85,7 @@ export default function ForecastChart({ reservoir, forecast }: Props) {
           {forecast.riskLevel}
         </span>
         <span className="text-xs text-slate-500">
-          Projected at {formatAF(forecast.day90)} AF ({Math.round((forecast.day90 / capacity) * 100)}% capacity)
+          Projected at {formatAF(forecast.day90)} acre-feet ({Math.round((forecast.day90 / capacity) * 100)}% capacity)
         </span>
       </div>
 
@@ -131,7 +131,7 @@ export default function ForecastChart({ reservoir, forecast }: Props) {
                 high: "Upper band",
                 low: "Lower band",
               };
-              return [`${formatAF(Number(val))} AF`, labels[String(name)] ?? String(name)];
+              return [`${formatAF(Number(val))} acre-feet`, labels[String(name)] ?? String(name)];
             }}
           />
           <Legend
@@ -215,7 +215,7 @@ export default function ForecastChart({ reservoir, forecast }: Props) {
           return (
             <div key={label} className="rounded-lg bg-slate-800/60 border border-blue-900/40 p-3 text-center">
               <div className="text-xs text-slate-400 mb-1">{label} outlook</div>
-              <div className="text-lg font-bold text-white">{formatAF(val)} <span className="text-xs font-normal text-slate-400">AF</span></div>
+              <div className="text-lg font-bold text-white">{formatAF(val)} <span className="text-xs font-normal text-slate-400">acre-feet</span></div>
               <div className="text-xs font-semibold mt-0.5" style={{ color: col }}>{pct}% full</div>
             </div>
           );
