@@ -51,10 +51,16 @@ export async function fetchAllReservoirs(): Promise<ReservoirWithData[]> {
   return Promise.all(
     RESERVOIRS.map(async (reservoir) => {
       let history: ReservoirDataPoint[];
+      let dataSource: "live" | "estimated" = "estimated";
 
       try {
         const fetched = await fetchCDEC(reservoir.id);
-        history = fetched.length >= 10 ? fetched : generateReservoirHistory(reservoir.capacityAF, reservoir.id);
+        if (fetched.length >= 10) {
+          history = fetched;
+          dataSource = "live";
+        } else {
+          history = generateReservoirHistory(reservoir.capacityAF, reservoir.id);
+        }
       } catch {
         history = generateReservoirHistory(reservoir.capacityAF, reservoir.id);
       }
@@ -69,6 +75,7 @@ export async function fetchAllReservoirs(): Promise<ReservoirWithData[]> {
         status: getStatus(percentFull),
         history,
         loading: false,
+        dataSource,
       };
     })
   );
@@ -86,6 +93,7 @@ export function getSeededReservoirs(): ReservoirWithData[] {
       status: getStatus(percentFull),
       history,
       loading: false,
+      dataSource: "estimated" as const,
     };
   });
 }

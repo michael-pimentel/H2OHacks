@@ -15,31 +15,25 @@ export interface ReservoirWithData extends Reservoir {
   status: "healthy" | "watch" | "warning" | "critical";
   history: ReservoirDataPoint[];
   loading: boolean;
+  dataSource: "live" | "estimated";
 }
 
-export type County = "Fresno" | "Tulare" | "Kings" | "Madera" | "Merced";
-export type CropType =
-  | "Almonds"
-  | "Pistachios"
-  | "Grapes"
-  | "Cotton"
-  | "Wheat"
-  | "Tomatoes"
-  | "Citrus"
-  | "Other";
+export type County = "Fresno" | "Tulare" | "Kings" | "Madera" | "Merced" | "San Joaquin";
 export type WaterSource = "Canal" | "Groundwater" | "Mixed";
 
-export interface UsageEntry {
+export interface HouseholdEntry {
   id: string;
-  date: string;
-  farmName: string;
+  month: string;           // "YYYY-MM"
+  label: string;           // optional nickname, e.g. "My home"
   county: County;
-  acres: number;
-  cropType: CropType;
-  waterUsedAF: number;
+  people: number;
+  gallonsPerMonth: number;
   source: WaterSource;
   notes: string;
 }
+
+/** @deprecated use HouseholdEntry */
+export type UsageEntry = HouseholdEntry;
 
 export interface PrecipDataPoint {
   month: string;

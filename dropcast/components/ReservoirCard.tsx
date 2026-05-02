@@ -47,10 +47,11 @@ export default function ReservoirCard({ reservoir }: Props) {
 
       <div>
         <div className="text-2xl font-bold text-white">
-          {formatAF(reservoir.currentAF)} <span className="text-sm font-normal text-slate-400">AF</span>
+          {formatAF(reservoir.currentAF)}{" "}
+          <span className="text-sm font-normal text-slate-400">acre-feet stored</span>
         </div>
         <div className="text-xs text-slate-400 mt-0.5">
-          of {formatAF(reservoir.capacityAF)} AF capacity
+          out of {formatAF(reservoir.capacityAF)} acre-feet total capacity
         </div>
       </div>
 
@@ -93,13 +94,22 @@ export default function ReservoirCard({ reservoir }: Props) {
                 fontSize: "11px",
                 color: "#f1f5f9",
               }}
-              formatter={(val) => [`${formatAF(Number(val))} AF`, "Storage"]}
+              formatter={(val) => [`${formatAF(Number(val))} acre-feet`, "Water stored"]}
               labelFormatter={(label) => label}
             />
           </AreaChart>
         </ResponsiveContainer>
       </div>
-      <div className="text-xs text-slate-500 text-center -mt-1">Last 90 days</div>
+      <div className="flex items-center justify-between -mt-1">
+        <div className="text-xs text-slate-500">Last 90 days</div>
+        <div className={`text-xs px-1.5 py-0.5 rounded font-medium ${
+          reservoir.dataSource === "live"
+            ? "bg-emerald-500/10 text-emerald-400"
+            : "bg-slate-700/60 text-slate-400"
+        }`}>
+          {reservoir.dataSource === "live" ? "Live data" : "Estimated"}
+        </div>
+      </div>
     </div>
   );
 }

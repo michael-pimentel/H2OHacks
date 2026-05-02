@@ -1,45 +1,55 @@
 "use client";
 import { useState } from "react";
 import { useUsageStore } from "@/lib/store";
-import type { County, CropType, WaterSource, UsageEntry } from "@/types";
-import { PlusCircle } from "lucide-react";
+import { SOURCE_LABEL } from "@/lib/households";
+import type { County, WaterSource, HouseholdEntry } from "@/types";
+import { PlusCircle, Lightbulb } from "lucide-react";
 
 const COUNTIES: County[] = ["Fresno", "Tulare", "Kings", "Madera", "Merced"];
-const CROPS: CropType[] = ["Almonds", "Pistachios", "Grapes", "Cotton", "Wheat", "Tomatoes", "Citrus", "Other"];
 const SOURCES: WaterSource[] = ["Canal", "Groundwater", "Mixed"];
+const PEOPLE_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8];
 
-const today = new Date().toISOString().slice(0, 10);
+const thisMonth = new Date().toISOString().slice(0, 7);
 
 const EMPTY = {
-  date: today,
-  farmName: "",
-  county: "Fresno" as County,
-  acres: "",
-  cropType: "Almonds" as CropType,
-  waterUsedAF: "",
+  month: thisMonth,
+  label: "",
+  county: "San Joaquin" as County,
+  people: "2",
+  gallonsPerMonth: "",
   source: "Canal" as WaterSource,
   notes: "",
 };
+
+// CA average: ~80 gallons/person/day
+const AVG_GALLONS_PER_PERSON_DAY = 80;
 
 export default function UsageForm() {
   const addEntry = useUsageStore((s) => s.addEntry);
   const [form, setForm] = useState(EMPTY);
   const [saved, setSaved] = useState(false);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
+  function handleChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+  }
+
+  function handleEstimate() {
+    const people = parseInt(form.people) || 2;
+    const estimated = Math.round(people * AVG_GALLONS_PER_PERSON_DAY * 30);
+    setForm((f) => ({ ...f, gallonsPerMonth: String(estimated) }));
   }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const entry: UsageEntry = {
+    const entry: HouseholdEntry = {
       id: crypto.randomUUID(),
-      date: form.date,
-      farmName: form.farmName,
+      month: form.month,
+      label: form.label || "My home",
       county: form.county,
-      acres: parseFloat(form.acres),
-      cropType: form.cropType,
-      waterUsedAF: parseFloat(form.waterUsedAF),
+      people: parseInt(form.people),
+      gallonsPerMonth: parseFloat(form.gallonsPerMonth),
       source: form.source,
       notes: form.notes,
     };
@@ -55,56 +65,109 @@ export default function UsageForm() {
 
   return (
     <form onSubmit={handleSubmit} className="rounded-xl bg-slate-900 border border-blue-900/60 p-6">
-      <h2 className="text-lg font-semibold text-white mb-5 flex items-center gap-2">
+      <h2 className="text-lg font-semibold text-white mb-1 flex items-center gap-2">
         <PlusCircle className="h-5 w-5 text-sky-400" />
-        Log Water Usage
+        Log Your Household Usage
       </h2>
+      <p className="text-xs text-slate-500 mb-5">
+        Find your monthly gallons on your water bill, or use the estimate button below.
+      </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <div>
-          <label className={labelCls}>Date</label>
-          <input type="date" name="date" value={form.date} onChange={handleChange} required className={inputCls} />
+          <label className={labelCls}>Month</label>
+          <input
+            type="month"
+            name="month"
+            value={form.month}
+            onChange={handleChange}
+            required
+            className={inputCls}
+          />
         </div>
 
         <div>
-          <label className={labelCls}>Farm Name</label>
-          <input type="text" name="farmName" value={form.farmName} onChange={handleChange} required placeholder="e.g. Miller Ranch" className={inputCls} />
+          <label className={labelCls}>Nickname (optional)</label>
+          <input
+            type="text"
+            name="label"
+            value={form.label}
+            onChange={handleChange}
+            placeholder="e.g. My home, Apt 3B"
+            className={inputCls}
+          />
         </div>
 
         <div>
           <label className={labelCls}>County</label>
           <select name="county" value={form.county} onChange={handleChange} className={inputCls}>
-            {COUNTIES.map((c) => <option key={c}>{c}</option>)}
+            {COUNTIES.map((c) => (
+              <option key={c}>{c}</option>
+            ))}
           </select>
         </div>
 
         <div>
-          <label className={labelCls}>Acres Irrigated</label>
-          <input type="number" name="acres" value={form.acres} onChange={handleChange} required min="0.1" step="0.1" placeholder="0.0" className={inputCls} />
-        </div>
-
-        <div>
-          <label className={labelCls}>Crop Type</label>
-          <select name="cropType" value={form.cropType} onChange={handleChange} className={inputCls}>
-            {CROPS.map((c) => <option key={c}>{c}</option>)}
+          <label className={labelCls}>People in household</label>
+          <select name="people" value={form.people} onChange={handleChange} className={inputCls}>
+            {PEOPLE_OPTIONS.map((n) => (
+              <option key={n} value={n}>
+                {n === 8 ? "8+" : n} {n === 1 ? "person" : "people"}
+              </option>
+            ))}
           </select>
         </div>
 
         <div>
-          <label className={labelCls}>Water Used (Acre-Feet)</label>
-          <input type="number" name="waterUsedAF" value={form.waterUsedAF} onChange={handleChange} required min="0.01" step="0.01" placeholder="0.00" className={inputCls} />
+          <label className={labelCls}>Monthly water use (gallons)</label>
+          <div className="flex gap-2">
+            <input
+              type="number"
+              name="gallonsPerMonth"
+              value={form.gallonsPerMonth}
+              onChange={handleChange}
+              required
+              min="1"
+              step="1"
+              placeholder={`e.g. ${Math.round(parseInt(form.people || "2") * AVG_GALLONS_PER_PERSON_DAY * 30)}`}
+              className={inputCls}
+            />
+            <button
+              type="button"
+              onClick={handleEstimate}
+              title="Fill in the CA average for your household size"
+              className="shrink-0 flex items-center gap-1 px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-medium transition-colors whitespace-nowrap"
+            >
+              <Lightbulb className="h-3.5 w-3.5 text-amber-400" />
+              Estimate
+            </button>
+          </div>
+          <p className="text-xs text-slate-500 mt-1">
+            Check your water bill, or hit Estimate for the CA average ({AVG_GALLONS_PER_PERSON_DAY} gal/person/day).
+          </p>
         </div>
 
         <div>
-          <label className={labelCls}>Water Source</label>
+          <label className={labelCls}>Water source</label>
           <select name="source" value={form.source} onChange={handleChange} className={inputCls}>
-            {SOURCES.map((s) => <option key={s}>{s}</option>)}
+            {SOURCES.map((s) => (
+              <option key={s} value={s}>
+                {SOURCE_LABEL[s]}
+              </option>
+            ))}
           </select>
         </div>
 
-        <div className="sm:col-span-2">
+        <div className="sm:col-span-2 lg:col-span-3">
           <label className={labelCls}>Notes (optional)</label>
-          <textarea name="notes" value={form.notes} onChange={handleChange} rows={2} placeholder="Any additional context..." className={`${inputCls} resize-none`} />
+          <textarea
+            name="notes"
+            value={form.notes}
+            onChange={handleChange}
+            rows={2}
+            placeholder="Any extra context — drought restrictions, lawn watering, etc."
+            className={`${inputCls} resize-none`}
+          />
         </div>
       </div>
 
@@ -117,7 +180,7 @@ export default function UsageForm() {
         </button>
         {saved && (
           <span className="text-sm text-emerald-400 font-medium animate-pulse">
-            ✓ Entry saved
+            ✓ Saved
           </span>
         )}
       </div>

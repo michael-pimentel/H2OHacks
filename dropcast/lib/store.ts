@@ -1,39 +1,34 @@
 "use client";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import type { UsageEntry } from "@/types";
+import type { HouseholdEntry } from "@/types";
 
 interface UsageStore {
-  entries: UsageEntry[];
-  addEntry: (entry: UsageEntry) => void;
+  entries: HouseholdEntry[];
+  addEntry: (entry: HouseholdEntry) => void;
   removeEntry: (id: string) => void;
 }
 
-export const useUsageStore = create<UsageStore>()(
-  persist(
-    (set) => ({
-      entries: [],
-      addEntry: (entry) =>
-        set((state) => ({ entries: [entry, ...state.entries] })),
-      removeEntry: (id) =>
-        set((state) => ({ entries: state.entries.filter((e) => e.id !== id) })),
-    }),
-    { name: "dropcast-usage" }
-  )
-);
+export const useUsageStore = create<UsageStore>()((set) => ({
+  entries: [],
+  addEntry: (entry) =>
+    set((state) => ({ entries: [entry, ...state.entries] })),
+  removeEntry: (id) =>
+    set((state) => ({ entries: state.entries.filter((e) => e.id !== id) })),
+}));
 
-export function computeStats(entries: UsageEntry[]) {
-  const totalAF = entries.reduce((sum, e) => sum + e.waterUsedAF, 0);
-  const totalAcres = entries.reduce((sum, e) => sum + e.acres, 0);
-  const avgAFPerAcre = totalAcres > 0 ? totalAF / totalAcres : 0;
+export function computeStats(entries: HouseholdEntry[]) {
+  const count = entries.length;
+  if (count === 0) return { totalAF: 0, avgGallonsPerPerson: 0, count: 0, dailyAF: 0 };
 
-  // Estimate average daily usage across the logged period
-  const dates = entries.map((e) => new Date(e.date).getTime());
-  const spanDays =
-    dates.length >= 2
-      ? (Math.max(...dates) - Math.min(...dates)) / 86400000 + 1
-      : 1;
-  const dailyAF = totalAF / spanDays;
+  const avgGallonsMonth =
+    entries.reduce((sum, e) => sum + e.gallonsPerMonth, 0) / count;
+  const avgPeople =
+    entries.reduce((sum, e) => sum + e.people, 0) / count;
+  const avgGallonsPerPerson = avgPeople > 0 ? avgGallonsMonth / avgPeople : 0;
 
-  return { totalAF, avgAFPerAcre, count: entries.length, dailyAF };
+  // 1 acre-foot = 325,851 gallons; forecast engine expects AF/day
+  const dailyAF = avgGallonsMonth / 325_851 / 30.44;
+  const totalAF = entries.reduce((sum, e) => sum + e.gallonsPerMonth / 325_851, 0);
+
+  return { totalAF, avgGallonsPerPerson, count, dailyAF };
 }

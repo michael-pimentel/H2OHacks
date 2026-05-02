@@ -1,11 +1,12 @@
 import type { ReservoirDataPoint, PrecipDataPoint, DroughtComparisonPoint } from "@/types";
 
 const RESERVOIRS = [
-  { id: "MIL", name: "Millerton Lake", capacityAF: 520500 },
-  { id: "SNL", name: "San Luis Reservoir", capacityAF: 2041000 },
-  { id: "PNF", name: "Pine Flat Lake", capacityAF: 1000000 },
-  { id: "TRM", name: "Terminus Reservoir", capacityAF: 148000 },
-  { id: "ORO", name: "Lake Oroville", capacityAF: 3537577 },
+  { id: "MIL", name: "Millerton Lake",    capacityAF:  520_500 },
+  { id: "SNL", name: "San Luis Reservoir", capacityAF: 2_041_000 },
+  { id: "PNF", name: "Pine Flat Lake",    capacityAF: 1_000_000 },
+  { id: "TRM", name: "Terminus Reservoir", capacityAF:  148_000 },
+  { id: "ORO", name: "Lake Oroville",     capacityAF: 3_537_577 },
+  { id: "NHG", name: "New Hogan Lake",    capacityAF:  317_000 },  // Stockton / San Joaquin
 ];
 
 export { RESERVOIRS };
@@ -36,6 +37,7 @@ export function generateReservoirHistory(
     PNF: { droughtLow: 0.25, recoveryPeak: 0.82, current: 0.55 },
     TRM: { droughtLow: 0.20, recoveryPeak: 0.74, current: 0.50 },
     ORO: { droughtLow: 0.28, recoveryPeak: 0.91, current: 0.67 },
+    NHG: { droughtLow: 0.21, recoveryPeak: 0.76, current: 0.54 },
   };
 
   const profile = profiles[stationId] ?? { droughtLow: 0.23, recoveryPeak: 0.80, current: 0.58 };
@@ -81,6 +83,7 @@ export function getDroughtComparisonData(): DroughtComparisonPoint[] {
       PNF: { d2015: 0.21, d2021: 0.25, cur: 0.55 },
       TRM: { d2015: 0.17, d2021: 0.20, cur: 0.50 },
       ORO: { d2015: 0.23, d2021: 0.28, cur: 0.67 },
+      NHG: { d2015: 0.18, d2021: 0.21, cur: 0.54 },
     };
     const p = profiles[r.id] ?? { d2015: 0.20, d2021: 0.23, cur: 0.58 };
     return {
